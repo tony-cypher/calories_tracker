@@ -13,7 +13,11 @@ def index(request):
         
     consumed_food = Consume.objects.filter(user=request.user)
     foods = Food.objects.all()
-    return render(request, 'calorie_tracker/index.html', {'foods':foods, 'consumed_food':consumed_food})
+    context = {
+        'foods':foods, 
+        'consumed_food':consumed_food
+    }
+    return render(request, 'calorie_tracker/index.html', context)
 
 def delete_consume(request, id):
     consumed_food = Consume.objects.get(id=id)
