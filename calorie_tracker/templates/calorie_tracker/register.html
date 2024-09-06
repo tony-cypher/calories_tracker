@@ -1,0 +1,36 @@
+{% extends 'calorie_tracker/base.html' %} {% block content %}
+<div class="container">
+  {% if form.errors %}
+  <div class="alert alert-dark" role="alert">
+    <ul>
+      {% for field, errors in form.errors.items %} {% for error in errors %}
+      <li>{{ error }}</li>
+      {% endfor %} {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+  <form class="row g-3" method="POST">
+    {% csrf_token %}
+    <div class="col-md-6">
+      <label for="email" class="form-label">Email</label>
+      {{ form.email }}
+    </div>
+    <div class="col-md-6">
+      <label for="username" class="form-label">Username</label>
+      {{ form.username }}
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Password</label>
+      {{ form.password1 }}
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Confirm Password</label>
+      {{ form.password2 }}
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-dark">Sign up</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

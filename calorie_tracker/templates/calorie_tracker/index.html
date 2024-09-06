@@ -1,133 +1,85 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calorie Tracker</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'calorie_tracker/css/main.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-</head>
-
-<body>
-    <div class="container-fluid">
-        <div class="row my-4">
-            <div class="col-md-12">
-                <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" href="#">Calorie Tracker</a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarSupportedContent">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                                <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Link</a>
-                                </li>
-                            </ul>
-
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </div>
-        <h4>Calorie Goal</h4>
-        <br>
-        <div class="row mx-3">
-            <div class="col-md-10">
-                <div class="progress" role="progressbar">
-                    <div class="progress-bar progress-bar-striped bg-dark" style="width: 30%"></div>
-                </div>
-            </div>
-        </div>
-        <div class="row my-5">
-            <form action="" method="POST">
-                <div class="form-group">
-                    {% csrf_token %}
-                    <label for="" class="col-md-2">
-                        <h5>Add Food</h5>
-                    </label>
-                    <select class="form-select" name="food_consumed" id="food_consumed">
-                        {% for food in foods %}
-                        <option value="{{ food.name }}">{{ food.name }}</option>
-                        {% endfor %}
-                    </select>
-                    <button type="submit" class="btn btn-dark col-md-2 mx-5">Add</button>
-                </div>
-            </form>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div>
-                    <h4>Today's Consumption</h4>
-                </div>
-                <table id="table" class="table table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th scope="col">No.</th>
-                            <th scope="col">Consumed(Food)</th>
-                            <th scope="col">Carbs(gm)</th>
-                            <th scope="col">Protein(gm)</th>
-                            <th scope="col">Fat(gm)</th>
-                            <th scope="col">Calories(Kcal)</th>
-                            <th scope="col">Remove</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in consumed_food %}
-                        <tr>
-                            <td></td>
-                            <td>{{ item.food_consumed.name }}</td>
-                            <td>{{ item.food_consumed.carb }}</td>
-                            <td>{{ item.food_consumed.protein }}</td>
-                            <td>{{ item.food_consumed.fat }}</td>
-                            <td>{{ item.food_consumed.calories }}</td>
-                            <td><a class="btn btn-dark" href="{% url 'delete' item.id %}">
-                                    <i class="bi bi-x-circle"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        <tr>
-                            <td id="name"><b>Total</b></td>
-                            <td id="totalCarb"></td>
-                            <td id="totalProtein"></td>
-                            <td id="totalFat"></td>
-                            <td id="totalCalories"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-5  offset-1">
-                <div>
-                    <h4>Today's breakdown</h4>
-                </div>
-                <div class="card-header bg-dark text-white">
-                    <h2>Macronutrients breakdown</h2>
-                </div>
-                <div class="col-md-12">
-                    <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
-                </div>
-            </div>
-        </div>
-
+{% extends 'calorie_tracker/base.html' %} {% block content %}
+<h4>Calorie Goal</h4>
+<br />
+<div class="row mx-3">
+  <div class="col-md-10">
+    <div class="progress" role="progressbar">
+      <div
+        class="progress-bar progress-bar-striped bg-dark"
+        style="width: 30%"
+      ></div>
     </div>
-
-
-
-    <script src="{% static 'calorie_tracker/js/main.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
-
-</body>
-
-</html>
+  </div>
+</div>
+<div class="row my-5">
+  <form action="" method="POST">
+    <div class="form-group">
+      {% csrf_token %}
+      <label for="" class="col-md-2">
+        <h5>Add Food</h5>
+      </label>
+      <select class="form-select" name="food_consumed" id="food_consumed">
+        {% for food in foods %}
+        <option value="{{ food.name }}">{{ food.name }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-dark col-md-2 mx-5">Add</button>
+    </div>
+  </form>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div>
+      <h4>Today's Consumption</h4>
+    </div>
+    <table id="table" class="table table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">No.</th>
+          <th scope="col">Consumed(Food)</th>
+          <th scope="col">Carbs(gm)</th>
+          <th scope="col">Protein(gm)</th>
+          <th scope="col">Fat(gm)</th>
+          <th scope="col">Calories(Kcal)</th>
+          <th scope="col">Remove</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in consumed_food %}
+        <tr>
+          <td></td>
+          <td>{{ item.food_consumed.name }}</td>
+          <td>{{ item.food_consumed.carb }}</td>
+          <td>{{ item.food_consumed.protein }}</td>
+          <td>{{ item.food_consumed.fat }}</td>
+          <td>{{ item.food_consumed.calories }}</td>
+          <td>
+            <a class="btn btn-dark" href="{% url 'delete' item.id %}">
+              <i class="bi bi-x-circle"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <td id="name"><b>Total</b></td>
+          <td id="totalCarb"></td>
+          <td id="totalProtein"></td>
+          <td id="totalFat"></td>
+          <td id="totalCalories"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-5 offset-1">
+    <div>
+      <h4>Today's breakdown</h4>
+    </div>
+    <div class="card-header bg-dark text-white">
+      <h2>Macronutrients breakdown</h2>
+    </div>
+    <div class="col-md-12">
+      <canvas id="myChart" style="width: 100%; max-width: 700px"></canvas>
+    </div>
+  </div>
+</div>
+{% endblock %}
